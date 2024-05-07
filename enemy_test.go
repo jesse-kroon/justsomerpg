@@ -14,12 +14,11 @@ func TestNewEnemy(t *testing.T) {
 	})
 
 	t.Run("should be able to create an enemy within player range", func(t *testing.T) {
-		player := NewPlayer("", Warrior)
-		player.level = 10
-		enemy := NewEnemy("Goblin", WithLevelInPlayerRange(player.level))
+		playerLevel := 10
+		enemy := DefaultNewEnemy(Goblin, playerLevel)
 
 		assert.Positive(t, enemy.level)
-		assert.True(t, enemy.level <= player.level+2 && enemy.level >= player.level-2)
+		assert.True(t, enemy.level <= playerLevel+2 && enemy.level >= playerLevel-2)
 	})
 
 	t.Run("should create an enemy with a weapon based on the enemy type", func(t *testing.T) {

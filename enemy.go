@@ -26,6 +26,11 @@ type Enemy struct {
 	weapon    Weapon
 }
 
+// This should be used in most cases to create a new enemy
+func DefaultNewEnemy(enemyType EnemyType, playerLevel int) *Enemy {
+	return NewEnemy(enemyType, WithLevelInPlayerRange(playerLevel))
+}
+
 func NewEnemy(enemyType EnemyType, options ...func(*Enemy)) *Enemy {
 	enemy := &Enemy{
 		name:      string(enemyType),
