@@ -7,6 +7,14 @@ import (
 )
 
 func TestNewEnemy(t *testing.T) {
+	t.Run("should correctly calculate experience held by enemy", func(t *testing.T) {
+		enemyGoblin := NewEnemy(Goblin, WithLevel(2))
+		assert.Equal(t, 10.0, enemyGoblin.experience)
+
+		enemyOrc := NewEnemy(Orc, WithLevel(3))
+		assert.Equal(t, 18.0, enemyOrc.experience)
+	})
+
 	t.Run("should be able to create an enemy with specified level", func(t *testing.T) {
 		enemy := NewEnemy("Goblin", WithLevel(2))
 

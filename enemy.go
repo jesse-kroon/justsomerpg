@@ -19,11 +19,17 @@ var enemyWeaponPool map[EnemyType]map[int]Weapon = map[EnemyType]map[int]Weapon{
 	},
 }
 
+var enemyBaseExperiencePool map[EnemyType]float64 = map[EnemyType]float64{
+	Goblin: 5,
+	Orc:    6,
+}
+
 type Enemy struct {
-	name      string
-	enemyType EnemyType
-	level     int
-	weapon    Weapon
+	name       string
+	enemyType  EnemyType
+	level      int
+	weapon     Weapon
+	experience float64
 }
 
 // This should be used in most cases to create a new enemy
@@ -41,6 +47,9 @@ func NewEnemy(enemyType EnemyType, options ...func(*Enemy)) *Enemy {
 	for _, o := range options {
 		o(enemy)
 	}
+
+	// Set experience after level is known. Enemy's level could in theory be 0 but this should never occur.
+	enemy.experience = float64(enemy.level) * enemyBaseExperiencePool[enemyType]
 
 	return enemy
 }
