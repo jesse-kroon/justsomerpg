@@ -1,4 +1,4 @@
-package item
+package main
 
 type Item interface {
 	Value() int

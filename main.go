@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	player := newPlayer("Mario", Mage)
+	player := NewPlayer("Mario", Mage)
 
 	fmt.Println(fmt.Sprintf("%v", player))
 }

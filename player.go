@@ -2,8 +2,6 @@ package main
 
 import (
 	"slices"
-
-	"github.com/jesse-kroon/somerpg/item"
 )
 
 type Class string
@@ -16,8 +14,9 @@ const (
 )
 
 type Inventory struct {
-	items []item.Item
-	value int
+	items    []Item
+	value    int
+	currency int
 }
 
 type Player struct {
@@ -26,26 +25,22 @@ type Player struct {
 	manaPoints   int
 	class        Class
 	inventory    *Inventory
-	weapon       item.Weapon
+	weapon       Weapon
 }
 
-func newInventory() *Inventory {
-	return &Inventory{items: []item.Item{}, value: 0}
-}
-
-func (p *Player) addItem(item item.Item) {
+func (p *Player) addItem(item Item) {
 	p.inventory.items = append(p.inventory.items, item)
 	p.inventory.value += item.Value()
 }
 
-func (p *Player) removeItem(itemToDelete item.Item) {
-	p.inventory.items = slices.DeleteFunc(p.inventory.items, func(item item.Item) bool {
+func (p *Player) removeItem(itemToDelete Item) {
+	p.inventory.items = slices.DeleteFunc(p.inventory.items, func(item Item) bool {
 		return item.Name() == itemToDelete.Name()
 	})
 	p.inventory.value -= itemToDelete.Value()
 }
 
-func newPlayer(name string, class Class) *Player {
+func NewPlayer(name string, class Class) *Player {
 	return &Player{
 		name:         name,
 		class:        class,
@@ -56,12 +51,12 @@ func newPlayer(name string, class Class) *Player {
 	}
 }
 
-func newWeapon(class Class) item.Weapon {
+func newWeapon(class Class) Weapon {
 	switch class {
 	case Warrior:
-		return item.NewSword("Wooden Sword", 2, 2)
+		return NewSword("Wooden Sword", 2, 2)
 	case Mage:
-		return item.NewStaff("Wooden Staff", 2, 3)
+		return NewStaff("Wooden Staff", 2, 3)
 	}
 
 	return nil
