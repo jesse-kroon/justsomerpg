@@ -18,6 +18,14 @@ func TestNewPlayer(t *testing.T) {
 		assert.Equal(t, 12, playerMage.healthPoints)
 		assert.Equal(t, 15, playerWarrior.healthPoints)
 	})
+
+	t.Run("characters should start with a weapon that is based on their class", func(t *testing.T) {
+		playerWarrior := newPlayer("", Warrior)
+		playerMage := newPlayer("", Mage)
+
+		assert.Equal(t, "Wooden Sword", playerWarrior.weapon.Name())
+		assert.Equal(t, "Wooden Staff", playerMage.weapon.Name())
+	})
 }
 
 func TestInventory(t *testing.T) {
@@ -58,13 +66,6 @@ func TestInventory(t *testing.T) {
 }
 
 func TestWeapon(t *testing.T) {
-	t.Run("characters should start with a weapon that is based on their class", func(t *testing.T) {
-		playerWarrior := newPlayer("", Warrior)
-		playerMage := newPlayer("", Mage)
-
-		assert.Equal(t, "Wooden Sword", playerWarrior.weapon.Name())
-		assert.Equal(t, "Wooden Staff", playerMage.weapon.Name())
-	})
 }
 
 func TestItem(t *testing.T) {
