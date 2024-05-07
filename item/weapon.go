@@ -1,6 +1,7 @@
 package item
 
 type Weapon interface {
+	Item
 	Damage() int
 }
 
@@ -9,6 +10,10 @@ type Sword struct {
 	value       int
 	damage      int
 	description string
+}
+
+func (s *Sword) Describe() string {
+	return s.description
 }
 
 func (s *Sword) Damage() int {
@@ -23,23 +28,41 @@ func (s *Sword) Name() string {
 	return s.name
 }
 
-func (s *Sword) Description() string {
+func NewSword(name string, value, damage int) *Sword {
+	return &Sword{
+		name:   name,
+		value:  value,
+		damage: damage,
+	}
+}
+
+type Staff struct {
+	name        string
+	value       int
+	damage      int
+	description string
+}
+
+func (s *Staff) Describe() string {
 	return s.description
 }
 
-func NewWeapon(name, category string, value, damage int) Weapon {
-	switch category {
-	case "sword":
-		return &Sword{
-			name:   name,
-			value:  value,
-			damage: damage,
-		}
-	}
+func (s *Staff) Damage() int {
+	return s.damage
+}
 
-	return &Sword{
-		name:   "Broken Sword",
-		value:  2,
-		damage: 5,
+func (s *Staff) Value() int {
+	return s.value
+}
+
+func (s *Staff) Name() string {
+	return s.name
+}
+
+func NewStaff(name string, value, damage int) *Staff {
+	return &Staff{
+		name:   name,
+		value:  value,
+		damage: damage,
 	}
 }

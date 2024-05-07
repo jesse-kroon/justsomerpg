@@ -1,6 +1,10 @@
 package main
 
-import "github.com/jesse-kroon/somerpg/item"
+import (
+	"slices"
+
+	"github.com/jesse-kroon/somerpg/item"
+)
 
 type Class string
 type ItemCategory string
@@ -16,6 +20,7 @@ const (
 
 type Inventory struct {
 	items []item.Item
+	value int
 }
 
 type Player struct {
@@ -24,14 +29,23 @@ type Player struct {
 	manaPoints   int
 	class        Class
 	inventory    *Inventory
+	weapon       item.Weapon
 }
 
 func newInventory() *Inventory {
-	return &Inventory{}
+	return &Inventory{items: []item.Item{}, value: 0}
 }
 
 func (p *Player) addItem(item item.Item) {
 	p.inventory.items = append(p.inventory.items, item)
+	p.inventory.value += item.Value()
+}
+
+func (p *Player) removeItem(itemToDelete item.Item) {
+	p.inventory.items = slices.DeleteFunc(p.inventory.items, func(item item.Item) bool {
+		return item.Name() == itemToDelete.Name()
+	})
+	p.inventory.value -= itemToDelete.Value()
 }
 
 func newPlayer(name string, class Class) *Player {
@@ -40,8 +54,20 @@ func newPlayer(name string, class Class) *Player {
 		class:        class,
 		manaPoints:   determineManaPoints(class),
 		healthPoints: determineHealthPoints(class),
+		weapon:       newWeapon(class),
 		inventory:    newInventory(),
 	}
+}
+
+func newWeapon(class Class) item.Weapon {
+	switch class {
+	case Warrior:
+		return item.NewSword("Wooden Sword", 2, 2)
+	case Mage:
+		return item.NewStaff("Wooden Staff", 2, 3)
+	}
+
+	return nil
 }
 
 func determineManaPoints(class Class) int {
