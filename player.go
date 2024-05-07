@@ -7,13 +7,10 @@ import (
 )
 
 type Class string
-type ItemCategory string
 
 const (
 	Warrior Class = "warrior"
 	Mage    Class = "mage"
-
-	Weapon ItemCategory = "weapon"
 
 	BASE_HEALTHPOINTS = 10
 )
