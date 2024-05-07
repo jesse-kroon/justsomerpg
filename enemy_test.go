@@ -25,14 +25,23 @@ func TestNewEnemy(t *testing.T) {
 	t.Run("should create an enemy with a weapon based on the enemy type", func(t *testing.T) {
 		enemy := NewEnemy(Goblin)
 		correctWeapon := false
-		// TODO assert that the weapon equipped by enemy is in the weapon pool of its type
+
+		// Look in the Goblin's weapon pool
 		for _, v := range enemyWeaponPool[Goblin] {
 			if v.Name() == enemy.weapon.Name() {
 				correctWeapon = true
 			}
 		}
-
 		assert.True(t, correctWeapon)
+
+		// Now look in the Orc's weapon pool
+		correctWeapon = false
+		for _, v := range enemyWeaponPool[Orc] {
+			if v.Name() == enemy.weapon.Name() {
+				correctWeapon = true
+			}
+		}
+		assert.False(t, correctWeapon)
 	})
 
 }
