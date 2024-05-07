@@ -21,6 +21,7 @@ type Inventory struct {
 
 type Player struct {
 	name         string
+	level        int
 	healthPoints int
 	manaPoints   int
 	class        Class
@@ -32,9 +33,10 @@ func NewPlayer(name string, class Class, options ...func(*Player)) *Player {
 	player := &Player{
 		name:         name,
 		class:        class,
+		level:        1,
 		manaPoints:   determineManaPoints(class),
 		healthPoints: determineHealthPoints(class),
-		weapon:       determineWeapon(class),
+		weapon:       determineStarterWeapon(class),
 		inventory:    NewInventory(),
 	}
 
@@ -80,7 +82,7 @@ func (p *Player) removeItem(itemToDelete Item) {
 	p.inventory.value -= itemToDelete.Value()
 }
 
-func determineWeapon(class Class) Weapon {
+func determineStarterWeapon(class Class) Weapon {
 	switch class {
 	case Warrior:
 		return NewSword("Wooden Sword", 2, 2)
