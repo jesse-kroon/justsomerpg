@@ -1,6 +1,7 @@
 package main
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -28,12 +29,36 @@ func TestNewPlayer(t *testing.T) {
 }
 
 func TestInventory(t *testing.T) {
+	assertInventoryContains := func(t testing.TB, inventory []Item, want string) {
+		if !slices.ContainsFunc(inventory, func(item Item) bool {
+			return item.Name() == want
+		}) {
+			t.Errorf("expected inventory to hold a '%s'", want)
+		}
+	}
+
 	t.Run("characters should start with an empty inventory", func(t *testing.T) {
 		playerWarrior := NewPlayer("", Warrior)
 		playerMage := NewPlayer("", Mage)
 
 		assert.Equal(t, playerWarrior.inventory, &Inventory{items: []Item{}, value: 0})
 		assert.Equal(t, playerMage.inventory, &Inventory{items: []Item{}, value: 0})
+	})
+
+	t.Run("inventory should hold currency when created with starting currency", func(t *testing.T) {
+		player := NewPlayer("", Warrior, WithStartingCurrency(10))
+
+		assert.Equal(t, 10, player.inventory.currency)
+	})
+
+	t.Run("should be able to start a character with default inventory based on class", func(t *testing.T) {
+		player := NewPlayer("", Warrior, WithStartingInventory())
+		itemName := "Whetstone"
+		assertInventoryContains(t, player.inventory.items, itemName)
+
+		player = NewPlayer("", Mage, WithStartingInventory())
+		itemName = "Magic Orb"
+		assertInventoryContains(t, player.inventory.items, itemName)
 	})
 
 	t.Run("should be able to add an item to inventory", func(t *testing.T) {

@@ -28,6 +28,46 @@ type Player struct {
 	weapon       Weapon
 }
 
+func NewPlayer(name string, class Class, options ...func(*Player)) *Player {
+	player := &Player{
+		name:         name,
+		class:        class,
+		manaPoints:   determineManaPoints(class),
+		healthPoints: determineHealthPoints(class),
+		weapon:       determineWeapon(class),
+		inventory:    NewInventory(),
+	}
+
+	for _, o := range options {
+		o(player)
+	}
+
+	return player
+}
+
+func WithStartingCurrency(amount int) func(*Player) {
+	return func(p *Player) {
+		p.inventory.currency = amount
+	}
+}
+
+func WithStartingInventory() func(*Player) {
+	return func(p *Player) {
+		switch p.class {
+		case Warrior:
+			p.inventory.items = []Item{
+				&CommonItem{name: "Whetstone", value: 1, description: "You can use this item to sharpen your sword"},
+				&CommonItem{name: "Torch", value: 1, description: "Use this to light your way in the darkest places of this world..."},
+			}
+		case Mage:
+			p.inventory.items = []Item{
+				&CommonItem{name: "Magic Orb", value: 1, description: "A memento from your time at the mages guild."},
+				&CommonItem{name: "Torch", value: 1, description: "Use this to light your way in the darkest places of this world..."},
+			}
+		}
+	}
+}
+
 func (p *Player) addItem(item Item) {
 	p.inventory.items = append(p.inventory.items, item)
 	p.inventory.value += item.Value()
@@ -40,18 +80,7 @@ func (p *Player) removeItem(itemToDelete Item) {
 	p.inventory.value -= itemToDelete.Value()
 }
 
-func NewPlayer(name string, class Class) *Player {
-	return &Player{
-		name:         name,
-		class:        class,
-		manaPoints:   determineManaPoints(class),
-		healthPoints: determineHealthPoints(class),
-		weapon:       newWeapon(class),
-		inventory:    newInventory(),
-	}
-}
-
-func newWeapon(class Class) Weapon {
+func determineWeapon(class Class) Weapon {
 	switch class {
 	case Warrior:
 		return NewSword("Wooden Sword", 2, 2)

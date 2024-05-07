@@ -1,15 +1,5 @@
 package main
 
-func newInventory(options ...func(*Inventory)) *Inventory {
-	inventory := &Inventory{}
-
-	for _, o := range options {
-		o(inventory)
-	}
-
-	return inventory
-}
-
-func withStartingMoney(amount int) {
-
+func NewInventory() *Inventory {
+	return &Inventory{items: []Item{}, value: 0}
 }
