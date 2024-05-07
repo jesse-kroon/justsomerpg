@@ -65,13 +65,16 @@ func TestInventory(t *testing.T) {
 	})
 }
 
-func TestWeapon(t *testing.T) {
-}
-
 func TestItem(t *testing.T) {
-	t.Run("should be able to get the value of an item", func(t *testing.T) {
-		someItem := item.NewItem(10, "Silver Locket", "this could have been a family heirloom")
+	t.Run("should return correct values for an item", func(t *testing.T) {
+		itemName := "Silver Locket"
+		itemValue := 10
+		itemDescription := "This could have been a family heirloom"
+		someItem := item.NewItem(itemValue, itemName, itemDescription)
 
-		assert.Equal(t, 10, someItem.Value())
+		assert.Equal(t, itemValue, someItem.Value())
+		assert.Equal(t, itemName, someItem.Name())
+		assert.Equal(t, itemDescription, someItem.Describe())
 	})
+
 }
