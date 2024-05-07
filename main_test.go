@@ -37,7 +37,7 @@ func TestInventory(t *testing.T) {
 		}
 	}
 
-	t.Run("characters should start with an empty inventory", func(t *testing.T) {
+	t.Run("characters should start with an empty inventory when no starting inventory is configured", func(t *testing.T) {
 		playerWarrior := NewPlayer("", Warrior)
 		playerMage := NewPlayer("", Mage)
 
@@ -52,13 +52,11 @@ func TestInventory(t *testing.T) {
 	})
 
 	t.Run("should be able to start a character with default inventory based on class", func(t *testing.T) {
-		player := NewPlayer("", Warrior, WithStartingInventory())
-		itemName := "Whetstone"
-		assertInventoryContains(t, player.inventory.items, itemName)
+		player := NewPlayer("", Warrior, WithClassBasedStartingInventory())
+		assertInventoryContains(t, player.inventory.items, "Whetstone")
 
-		player = NewPlayer("", Mage, WithStartingInventory())
-		itemName = "Magic Orb"
-		assertInventoryContains(t, player.inventory.items, itemName)
+		player = NewPlayer("", Mage, WithClassBasedStartingInventory())
+		assertInventoryContains(t, player.inventory.items, "Magic Orb")
 	})
 
 	t.Run("should be able to add an item to inventory", func(t *testing.T) {

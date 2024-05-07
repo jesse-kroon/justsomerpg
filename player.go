@@ -51,7 +51,7 @@ func WithStartingCurrency(amount int) func(*Player) {
 	}
 }
 
-func WithStartingInventory() func(*Player) {
+func WithClassBasedStartingInventory() func(*Player) {
 	return func(p *Player) {
 		switch p.class {
 		case Warrior:
