@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"slices"
 )
 
@@ -88,6 +89,18 @@ func (p *Player) addExperiencePoints(amount int) {
 	p.experiencePoints += amount
 
 	// Check if experience points are >= required for level up, if so, level up
+	if p.experiencePoints >= ExperienceRequiredForNextLevel(p.level) {
+		p.level++
+	}
+}
+
+func (p *Player) XPToNextLevel() int {
+	return ExperienceRequiredForNextLevel(p.level) - p.experiencePoints
+}
+
+func ExperienceRequiredForNextLevel(currentLevel int) int {
+	baseXP := 500
+	return int(math.Floor(float64(baseXP) * math.Pow(float64(currentLevel), 1.5)))
 }
 
 func determineStartingWeapon(class Class) Weapon {

@@ -16,4 +16,17 @@ func TestPlayer(t *testing.T) {
 
 		assert.Equal(t, 10, player.experiencePoints)
 	})
+
+	t.Run("should be able to level up", func(t *testing.T) {
+		player := NewPlayer("", Warrior)
+
+		player.addExperiencePoints(player.XPToNextLevel())
+		assert.Equal(t, 2, player.level)
+
+		player.addExperiencePoints(player.XPToNextLevel())
+		assert.Equal(t, 3, player.level)
+
+		player.addExperiencePoints(player.XPToNextLevel())
+		assert.Equal(t, 4, player.level)
+	})
 }
