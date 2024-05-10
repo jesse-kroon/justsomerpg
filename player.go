@@ -20,6 +20,14 @@ type Inventory struct {
 	currency int
 }
 
+type Attributes struct {
+	Strength  int
+	Stamina   int
+	Intellect int
+	Toughness int
+	Agility   int
+}
+
 type Player struct {
 	name             string
 	level            int
@@ -29,6 +37,7 @@ type Player struct {
 	inventory        *Inventory
 	weapon           Weapon
 	experiencePoints int
+	attributes       *Attributes
 }
 
 func NewPlayer(name string, class Class, options ...func(*Player)) *Player {
@@ -41,6 +50,7 @@ func NewPlayer(name string, class Class, options ...func(*Player)) *Player {
 		healthPoints:     determineStartingHealthPoints(class),
 		weapon:           determineStartingWeapon(class),
 		inventory:        NewInventory(),
+		attributes:       determineAttributes(class),
 	}
 
 	for _, o := range options {
@@ -118,15 +128,29 @@ func ExperienceRequiredForNextLevel(currentLevel int) int {
 	return int(math.Floor(float64(baseXP) * math.Pow(float64(currentLevel), 1.5)))
 }
 
-func determineStartingWeapon(class Class) Weapon {
+func determineAttributes(class Class) *Attributes {
+	attributes := new(Attributes)
+
 	switch class {
 	case Warrior:
-		return NewSword("Wooden Sword", 2, 2)
+		attributes = &Attributes{Strength: 9, Stamina: 5, Agility: 7, Toughness: 10, Intellect: 2}
 	case Mage:
-		return NewStaff("Wooden Staff", 2, 3)
+		attributes = &Attributes{Strength: 2, Stamina: 5, Agility: 3, Toughness: 6, Intellect: 9}
 	}
 
-	return nil
+	return attributes
+}
+
+func determineStartingWeapon(class Class) Weapon {
+	var w Weapon
+	switch class {
+	case Warrior:
+		w = NewSword("Wooden Sword", 2, 2)
+	case Mage:
+		w = NewStaff("Wooden Staff", 2, 3)
+	}
+
+	return w
 }
 
 func determineStartingManaPoints(class Class) int {

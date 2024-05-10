@@ -25,6 +25,17 @@ func TestNewPlayer(t *testing.T) {
 		assert.Equal(t, "Wooden Sword", playerWarrior.weapon.Name())
 		assert.Equal(t, "Wooden Staff", playerMage.weapon.Name())
 	})
+
+	t.Run("should correctly assign stats to player based on class", func(t *testing.T) {
+		playerWarrior := NewPlayer("", Warrior)
+		playerMage := NewPlayer("", Mage)
+
+		expectedStatsWarrior := &Attributes{Strength: 9, Stamina: 5, Agility: 7, Toughness: 10, Intellect: 2}
+		expectedStatsMage := &Attributes{Strength: 2, Stamina: 5, Agility: 3, Toughness: 6, Intellect: 9}
+
+		assert.Equal(t, expectedStatsMage, playerMage.attributes)
+		assert.Equal(t, expectedStatsWarrior, playerWarrior.attributes)
+	})
 }
 
 func TestPlayer(t *testing.T) {
