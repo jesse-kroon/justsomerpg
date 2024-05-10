@@ -88,10 +88,25 @@ func (p *Player) removeItem(itemToDelete Item) {
 func (p *Player) addExperiencePoints(amount int) {
 	p.experiencePoints += amount
 
-	// Check if experience points are >= required for level up, if so, level up
 	if p.experiencePoints >= ExperienceRequiredForNextLevel(p.level) {
-		p.level++
+		p.LevelUp()
 	}
+}
+
+func (p *Player) LevelUp() {
+	p.level++
+
+	// Edit HP/MP
+	if p.class == Warrior {
+		p.healthPoints += 5
+	} else {
+		p.healthPoints += 2
+	}
+	// in the future implement a boolean to check if class uses mana
+	if p.class == Mage {
+		p.manaPoints += 5
+	}
+	// Edit stats
 }
 
 func (p *Player) XPToNextLevel() int {

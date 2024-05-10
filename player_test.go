@@ -6,6 +6,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNewPlayer(t *testing.T) {
+	t.Run("should correctly assign starting health and manapoints based on player class", func(t *testing.T) {
+		playerWarrior := NewPlayer("", Warrior)
+		playerMage := NewPlayer("", Mage)
+
+		assert.Equal(t, 12, playerMage.healthPoints)
+		assert.Equal(t, 15, playerMage.manaPoints)
+
+		assert.Equal(t, 15, playerWarrior.healthPoints)
+		assert.Equal(t, 0, playerWarrior.manaPoints)
+	})
+
+	t.Run("characters should start with a weapon that is based on their class", func(t *testing.T) {
+		playerWarrior := NewPlayer("", Warrior)
+		playerMage := NewPlayer("", Mage)
+
+		assert.Equal(t, "Wooden Sword", playerWarrior.weapon.Name())
+		assert.Equal(t, "Wooden Staff", playerMage.weapon.Name())
+	})
+}
+
 func TestPlayer(t *testing.T) {
 	t.Run("should be able to gain experience", func(t *testing.T) {
 		player := NewPlayer("", Warrior)
@@ -28,5 +49,19 @@ func TestPlayer(t *testing.T) {
 
 		player.addExperiencePoints(player.XPToNextLevel())
 		assert.Equal(t, 4, player.level)
+	})
+
+	t.Run("should increase MP/HP on level up", func(t *testing.T) {
+		playerMage := NewPlayer("", Mage)
+		playerWarrior := NewPlayer("", Warrior)
+
+		playerMage.addExperiencePoints(playerMage.XPToNextLevel())
+		playerWarrior.addExperiencePoints(playerWarrior.XPToNextLevel())
+
+		assert.Equal(t, 14, playerMage.healthPoints)
+		assert.Equal(t, 20, playerMage.manaPoints)
+
+		assert.Equal(t, 20, playerWarrior.healthPoints)
+		assert.Equal(t, 0, playerWarrior.manaPoints)
 	})
 }

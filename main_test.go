@@ -7,26 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewPlayer(t *testing.T) {
-	t.Run("should correctly assign health and manapoints based on player class", func(t *testing.T) {
-		playerWarrior := NewPlayer("", Warrior)
-		playerMage := NewPlayer("", Mage)
-
-		assert.Equal(t, 0, playerWarrior.manaPoints)
-		assert.Equal(t, 15, playerMage.manaPoints)
-
-		assert.Equal(t, 12, playerMage.healthPoints)
-		assert.Equal(t, 15, playerWarrior.healthPoints)
-	})
-
-	t.Run("characters should start with a weapon that is based on their class", func(t *testing.T) {
-		playerWarrior := NewPlayer("", Warrior)
-		playerMage := NewPlayer("", Mage)
-
-		assert.Equal(t, "Wooden Sword", playerWarrior.weapon.Name())
-		assert.Equal(t, "Wooden Staff", playerMage.weapon.Name())
-	})
-}
 
 func TestInventory(t *testing.T) {
 	assertInventoryContains := func(t testing.TB, inventory []Item, want string) {
