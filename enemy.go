@@ -1,6 +1,8 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 type EnemyType string
 
@@ -19,7 +21,7 @@ var enemyWeaponPool map[EnemyType]map[int]Weapon = map[EnemyType]map[int]Weapon{
 	},
 }
 
-var enemyBaseExperiencePool map[EnemyType]float64 = map[EnemyType]float64{
+var enemyBaseExperiencePool map[EnemyType]int = map[EnemyType]int{
 	Goblin: 5,
 	Orc:    6,
 }
@@ -29,7 +31,7 @@ type Enemy struct {
 	enemyType  EnemyType
 	level      int
 	weapon     Weapon
-	experience float64
+	experience int
 }
 
 // This should be used in most cases to create a new enemy
@@ -49,7 +51,7 @@ func NewEnemy(enemyType EnemyType, options ...func(*Enemy)) *Enemy {
 	}
 
 	// Set experience after level is known. Enemy's level could in theory be 0 but this should never occur.
-	enemy.experience = float64(enemy.level) * enemyBaseExperiencePool[enemyType]
+	enemy.experience = enemy.level * enemyBaseExperiencePool[enemyType]
 
 	return enemy
 }
