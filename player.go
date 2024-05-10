@@ -20,24 +20,26 @@ type Inventory struct {
 }
 
 type Player struct {
-	name         string
-	level        int
-	healthPoints int
-	manaPoints   int
-	class        Class
-	inventory    *Inventory
-	weapon       Weapon
+	name             string
+	level            int
+	healthPoints     int
+	manaPoints       int
+	class            Class
+	inventory        *Inventory
+	weapon           Weapon
+	experiencePoints int
 }
 
 func NewPlayer(name string, class Class, options ...func(*Player)) *Player {
 	player := &Player{
-		name:         name,
-		class:        class,
-		level:        1,
-		manaPoints:   determineManaPoints(class),
-		healthPoints: determineHealthPoints(class),
-		weapon:       determineStarterWeapon(class),
-		inventory:    NewInventory(),
+		name:             name,
+		class:            class,
+		level:            1,
+		experiencePoints: 0,
+		manaPoints:       determineStartingManaPoints(class),
+		healthPoints:     determineStartingHealthPoints(class),
+		weapon:           determineStartingWeapon(class),
+		inventory:        NewInventory(),
 	}
 
 	for _, o := range options {
@@ -82,7 +84,13 @@ func (p *Player) removeItem(itemToDelete Item) {
 	p.inventory.value -= itemToDelete.Value()
 }
 
-func determineStarterWeapon(class Class) Weapon {
+func (p *Player) addExperiencePoints(amount int) {
+	p.experiencePoints += amount
+
+	// Check if experience points are >= required for level up, if so, level up
+}
+
+func determineStartingWeapon(class Class) Weapon {
 	switch class {
 	case Warrior:
 		return NewSword("Wooden Sword", 2, 2)
@@ -93,7 +101,7 @@ func determineStarterWeapon(class Class) Weapon {
 	return nil
 }
 
-func determineManaPoints(class Class) int {
+func determineStartingManaPoints(class Class) int {
 	var manaPoints int
 
 	switch class {
@@ -106,7 +114,7 @@ func determineManaPoints(class Class) int {
 	return manaPoints
 }
 
-func determineHealthPoints(class Class) int {
+func determineStartingHealthPoints(class Class) int {
 	var additionalHealthPoints int = 0
 
 	switch class {
