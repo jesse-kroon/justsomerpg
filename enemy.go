@@ -27,11 +27,12 @@ var enemyBaseExperiencePool map[EnemyType]int = map[EnemyType]int{
 }
 
 type Enemy struct {
-	name       string
-	enemyType  EnemyType
-	level      int
-	weapon     Weapon
-	experience int
+	name         string
+	enemyType    EnemyType
+	level        int
+	weapon       Weapon
+	experience   int
+	healthPoints int
 }
 
 // This should be used in most cases to create a new enemy
@@ -41,18 +42,19 @@ func DefaultNewEnemy(enemyType EnemyType, playerLevel int) *Enemy {
 
 func NewEnemy(enemyType EnemyType, options ...func(*Enemy)) *Enemy {
 	enemy := &Enemy{
-		name:      string(enemyType),
-		enemyType: enemyType,
-		weapon:    randomWeaponForEnemyType(enemyType),
+		name:         string(enemyType),
+		enemyType:    enemyType,
+		weapon:       randomWeaponForEnemyType(enemyType),
+		healthPoints: determineStartingHealthPointsForEnemy(enemyType),
 	}
 
 	for _, o := range options {
 		o(enemy)
 	}
 
-	// Set experience after level is known. Enemy's level could in theory be 0 but this should never occur.
+	// Set experience and HP after level is known. Enemy's level could in theory be 0 but this should never occur.
 	enemy.experience = enemy.level * enemyBaseExperiencePool[enemyType]
-
+	enemy.healthPoints *= enemy.level
 	return enemy
 }
 
@@ -77,4 +79,15 @@ func WithLevelInPlayerRange(playerLevel int) func(*Enemy) {
 
 func randomWeaponForEnemyType(enemyType EnemyType) Weapon {
 	return enemyWeaponPool[enemyType][len(enemyWeaponPool[enemyType])-1]
+}
+
+func determineStartingHealthPointsForEnemy(enemyType EnemyType) (baseHP int) {
+	switch enemyType {
+	case Goblin:
+		baseHP = 10
+	case Orc:
+		baseHP = 13
+	}
+
+	return
 }
