@@ -7,7 +7,7 @@ func Combat(p *Player, e *Enemy) {
 	playerTurn := playerInitiative > EnemyInitiative
 
 	// Enter combat loop
-	// Should think of a way to add a basic hit/miss mechanic
+	// TODO: think of a way to add a basic hit/miss mechanic
 	for p.healthPoints != 0 && e.healthPoints != 0 {
 		if playerTurn {
 			fmt.Printf("You deal %d damage to the enemy %s\n", p.weapon.Damage(), e.name)
