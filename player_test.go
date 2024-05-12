@@ -75,4 +75,26 @@ func TestPlayer(t *testing.T) {
 		assert.Equal(t, 20, playerWarrior.healthPoints)
 		assert.Equal(t, 0, playerWarrior.manaPoints)
 	})
+
+	t.Run("should correctly modify player stats on level up", func(t *testing.T) {
+		playerMage := NewPlayer("", Mage)
+		playerIntellectOnLevel1 := playerMage.attributes.Intellect
+		assert.Equal(t, 9, playerIntellectOnLevel1)
+
+		playerMage.LevelUp()
+
+		playerIntellectOnLevel2 := playerMage.attributes.Intellect
+		assert.Equal(t, 12, playerIntellectOnLevel2)
+
+		playerMage.LevelUp()
+
+		// shouldn't increase on non-even levels
+		playerIntellectOnLevel3 := playerMage.attributes.Intellect
+		assert.Equal(t, 12, playerIntellectOnLevel3)
+
+		playerMage.LevelUp()
+
+		playerIntellectOnLevel4 := playerMage.attributes.Intellect
+		assert.Equal(t, 15, playerIntellectOnLevel4)
+	})
 }

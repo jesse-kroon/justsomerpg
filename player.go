@@ -116,7 +116,26 @@ func (p *Player) LevelUp() {
 	if p.class == Mage {
 		p.manaPoints += 5
 	}
-	// Edit stats
+
+	// Edit attributes
+	// This needs to be extracted to separate functions but just need a basic thing to work now
+	if p.class == Warrior {
+		if p.level%2 == 0 {
+			p.attributes.Stamina += 2
+			p.attributes.Toughness += 2
+			p.attributes.Strength += 2
+			p.attributes.Agility += 2
+		}
+	}
+
+	if p.class == Mage {
+		if p.level%2 == 0 {
+			p.attributes.Stamina += 1
+			p.attributes.Toughness += 1
+			p.attributes.Intellect += 3
+			p.attributes.Agility += 2
+		}
+	}
 }
 
 func (p *Player) XPToNextLevel() int {
