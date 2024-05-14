@@ -9,21 +9,26 @@ type EnemyType string
 const (
 	Goblin EnemyType = "Goblin"
 	Orc    EnemyType = "Orc"
+	Human  EnemyType = "Human"
 )
 
 var enemyWeaponPool map[EnemyType]map[int]Weapon = map[EnemyType]map[int]Weapon{
 	Goblin: {
-		0: &Sword{"Short sword", 1, 2, "A rough-looking short blade"},
+		0: &Sword{"Short sword", 1, 2, "A nasty-looking crooked blade, covered in filth"},
 		1: &Staff{"Goblin Staff", 1, 3, "A crude staff cut out of dark wood"},
 	},
 	Orc: {
 		0: &Sword{"Jagged Blade", 1, 2, "A rough-looking short blade"},
+	},
+	Human: {
+		0: &Fists{"Bare Knuckles", 0, 1, "Just them good ol' fists"},
 	},
 }
 
 var enemyBaseExperiencePool map[EnemyType]int = map[EnemyType]int{
 	Goblin: 5,
 	Orc:    6,
+	Human:  3,
 }
 
 type Enemy struct {
@@ -84,9 +89,11 @@ func randomWeaponForEnemyType(enemyType EnemyType) Weapon {
 func determineStartingHealthPointsForEnemy(enemyType EnemyType) (baseHP int) {
 	switch enemyType {
 	case Goblin:
-		baseHP = 10
+		baseHP = 11
 	case Orc:
 		baseHP = 13
+	default:
+		baseHP = 10
 	}
 
 	return
