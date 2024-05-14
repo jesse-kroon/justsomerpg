@@ -5,6 +5,29 @@ type Weapon interface {
 	Damage() int
 }
 
+type Fists struct {
+	name        string
+	value       int
+	damage      int
+	description string
+}
+
+func (f *Fists) Describe() string {
+	return f.description
+}
+
+func (f *Fists) Damage() int {
+	return f.damage
+}
+
+func (f *Fists) Value() int {
+	return f.value
+}
+
+func (f *Fists) Name() string {
+	return f.name
+}
+
 type Sword struct {
 	name        string
 	value       int
