@@ -9,10 +9,12 @@ import (
 )
 
 type Scenario struct {
+	Dialogue     func()
 	Options      map[int]string
 	FollowUp     map[string]*Scenario
 	End          string
 	NextScenario *Scenario
+	Enemies      []*Enemy
 }
 
 func (s *Scenario) DisplayOptions() {
@@ -22,9 +24,18 @@ func (s *Scenario) DisplayOptions() {
 }
 
 func (s *Scenario) PlayScenario() {
-	if len(s.Options) == 0 {
+	s.Dialogue()
+
+	// Check if there's anything to do in this scenario
+	if len(s.Options) == 0 && len(s.Enemies) == 0 {
 		fmt.Println(s.End)
 		return
+	}
+
+	if len(s.Enemies) != 0 {
+		for _, enemy := range s.Enemies {
+			Combat(player, enemy)
+		}
 	}
 
 	playerChoice := getPlayerChoice(s.Options)
@@ -33,7 +44,13 @@ func (s *Scenario) PlayScenario() {
 		s.FollowUp[playerChoice].PlayScenario()
 	}
 	fmt.Println(s.End)
-	s.NextScenario.PlayScenario()
+
+	// Remove this at one point
+	if s.NextScenario != nil {
+		s.NextScenario.PlayScenario()
+	} else {
+		fmt.Println("You have reached the end for now")
+	}
 }
 
 var player *Player
@@ -43,6 +60,7 @@ func main() {
 	fmt.Println("Welcome to JustSomeRPG. This game is under development.")
 
 	CharacterCreation()
+	StartGame(player.class)
 }
 
 func CharacterCreation() {
@@ -62,10 +80,9 @@ func CharacterCreation() {
 	ClearScreen()
 	fmt.Printf("You are %s, level 1 %s. Your journey starts here...\n", player.name, player.class)
 	fmt.Println()
-	DisplayClassIntro(player.class)
 }
 
-func DisplayClassIntro(class Class) {
+func StartGame(class Class) {
 	switch class {
 	case Warrior:
 		WarriorIntro()
@@ -76,25 +93,34 @@ func DisplayClassIntro(class Class) {
 
 func WarriorIntro() {
 	s := &Scenario{
+		Dialogue: func() {
+			fmt.Println("You wake up in the inn of Edgewood, a small village in the Southern parts of Kharea...")
+			fmt.Println("A vague memory of last night slips your mind, as you try to remember how you got here. You shrug it off, no sense in putting much effort.")
+			fmt.Println("On the table in the small room lies your gear, a sword and a shield. You think about how long it's been since you had to use them... Too long for your liking.")
+			fmt.Println("You get up from your bed, quickly wash your face and grab your gear. As you head towards the room's exit, you hear a commotion coming from down the stairs.")
+			fmt.Println("As you descend the steps, you notice a big, plump man yelling at the innkeeper. His face red, although you can't quite tell if it's from anger or having too much to drink.")
+			fmt.Println()
+		},
 		Options: map[int]string{
 			1: "Try to calm the man",
 			2: "Grab the man by his shoulders and tell him to stop, or else...",
 			3: "Ignore what's happening and head for the door",
 		},
 		FollowUp: map[string]*Scenario{
-			"Try to calm the man": {End: "The man looks at you and ROARSS OMG WHAT?!?!?!"},
+			"Try to calm the man": {
+				Dialogue: func() {
+					fmt.Println("The agressive man looks at you and spits you in the face. Flabbergasted, you retreat and hold your fists up.")
+				},
+				Enemies: []*Enemy{NewEnemy(Human, WithLevel(1))},
+				End:     "The man lies on the floor, unconscious. You look around...",
+				NextScenario: &Scenario{Dialogue: func() {
+					fmt.Println("I haven't actually thought about this...")
+				}},
+			},
 			"Grab the man by his shoulders and tell him to stop, or else...": {},
 			"Ignore what's happening and head for the door":                  {},
 		},
-		End:          "Whatever..... TESTINGGGG",
-		NextScenario: &Scenario{},
 	}
-	fmt.Println("You wake up in the inn of Edgewood, a small village in the Southern parts of Kharea...")
-	fmt.Println("A vague memory of last night slips your mind, as you try to remember how you got here. You shrug it off, no sense in putting much effort.")
-	fmt.Println("On the table in the small room lies your gear, a sword and a shield. You think about how long it's been since you had to use them... Too long for your liking.")
-	fmt.Println("You get up from your bed, quickly wash your face and grab your gear. As you head towards the room's exit, you hear a commotion coming from down the stairs.")
-	fmt.Println("As you descend the steps, you notice a big, plump man yelling at the innkeeper. His face red, although you can't quite tell if it's from anger or having too much to drink.")
-	fmt.Println()
 
 	s.PlayScenario()
 }
