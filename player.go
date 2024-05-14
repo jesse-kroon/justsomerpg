@@ -7,9 +7,13 @@ import (
 
 type Class string
 
+func (c Class) String() string {
+	return string(c)
+}
+
 const (
-	Warrior Class = "warrior"
-	Mage    Class = "mage"
+	Warrior Class = "Warrior"
+	Mage    Class = "Mage"
 
 	BASE_HEALTHPOINTS = 10
 )
