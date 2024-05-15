@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type Scenario struct {
@@ -47,6 +49,8 @@ func (s *Scenario) PlayScenario() {
 
 	// Remove this at one point
 	if s.NextScenario != nil {
+		time.Sleep(time.Second * 2)
+		ClearScreen()
 		s.NextScenario.PlayScenario()
 	} else {
 		fmt.Println("You have reached the end for now")
@@ -135,7 +139,12 @@ func getPlayerInput() string {
 	return input.Text()
 }
 
+// TODO: Think of ways to make this function smaller
 func getPlayerChoice[T any](options map[int]T) T {
+	var err error
+	var chosenInput int
+	var validInput bool = false
+
 	keys := make([]int, 0, len(options))
 	for k := range options {
 		keys = append(keys, k)
@@ -146,9 +155,34 @@ func getPlayerChoice[T any](options map[int]T) T {
 		fmt.Printf("%d.\t%v\n", k, options[k])
 	}
 
-	input := bufio.NewScanner(os.Stdin)
-	input.Scan()
+	for !validInput {
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		chosenInput, err = strconv.Atoi(input.Text())
+		if err != nil {
+			fmt.Println("You did not enter a valid number. Please try again...")
+			time.Sleep(time.Second * 1)
+		} else {
+			validInput = true
+		}
+	}
 
-	inputT, _ := strconv.Atoi(input.Text())
-	return options[inputT]
+	validOption := slices.Contains(keys, chosenInput)
+	for !validOption {
+		fmt.Println("You did not enter a valid option. Please try again...")
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		chosenInput, err = strconv.Atoi(input.Text())
+		if err != nil {
+			fmt.Println("You did not enter a valid option. Please try again...")
+			time.Sleep(time.Second * 1)
+		}
+
+		if slices.Contains(keys, chosenInput) {
+			validOption = true
+			break
+		}
+	}
+
+	return options[chosenInput]
 }
