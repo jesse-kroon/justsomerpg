@@ -160,7 +160,7 @@ func getPlayerChoice[T any](options map[int]T) T {
 		input.Scan()
 		chosenInput, err = strconv.Atoi(input.Text())
 		if err != nil {
-			fmt.Println("You did not enter a valid number. Please try again...")
+			fmt.Println("Please enter a number corresponding to the option you would like to perform")
 			time.Sleep(time.Second * 1)
 		} else {
 			validInput = true
@@ -174,8 +174,8 @@ func getPlayerChoice[T any](options map[int]T) T {
 		input.Scan()
 		chosenInput, err = strconv.Atoi(input.Text())
 		if err != nil {
-			fmt.Println("You did not enter a valid option. Please try again...")
-			time.Sleep(time.Second * 1)
+			fmt.Println("Please enter a number corresponding to the option you would like to perform")
+			time.Sleep(time.Millisecond * 500)
 		}
 
 		if slices.Contains(keys, chosenInput) {
